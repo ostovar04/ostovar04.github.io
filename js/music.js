@@ -8,7 +8,7 @@
 
   audio.loop = true;
   audio.volume = 0.22;
-  let messageKey = 'musicBlocked';
+  let messageKey = '';
 
   function refreshControls() {
     const playing = !audio.paused;
@@ -20,8 +20,13 @@
     }
     button.setAttribute('aria-pressed', playing ? 'true' : 'false');
     if (icon) icon.textContent = playing ? 'Ⅱ' : '▶';
-    state.setAttribute('data-i18n', messageKey);
-    state.textContent = window.APP ? window.APP.t(messageKey) : '';
+    if (messageKey) {
+      state.setAttribute('data-i18n', messageKey);
+      state.textContent = window.APP ? window.APP.t(messageKey) : '';
+    } else {
+      state.removeAttribute('data-i18n');
+      state.textContent = '';
+    }
   }
 
   function startMusic() {
@@ -31,11 +36,11 @@
         messageKey = 'musicPlaying';
         refreshControls();
       }).catch(function () {
-        messageKey = 'musicBlocked';
+        messageKey = '';
         refreshControls();
       });
     } else {
-      messageKey = audio.paused ? 'musicBlocked' : 'musicPlaying';
+      messageKey = audio.paused ? '' : 'musicPlaying';
       refreshControls();
     }
   }
